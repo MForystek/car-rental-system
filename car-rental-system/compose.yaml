@@ -1,0 +1,26 @@
+services:
+  postgresql:
+    image: 'postgres:17.6'
+    container_name: 'postgres'
+    environment:
+      POSTGRES_DB: cars-renting
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  car-rental-system:
+    image: 'car-rental-system:0.0.1'
+    container_name: 'car-rental-system'
+    environment:
+      DB_HOST: postgresql
+      DB_NAME: cars-renting
+      DB_USER: admin
+      DB_PASSWORD: password
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgresql
+
+volumes:
+  postgres_data:
