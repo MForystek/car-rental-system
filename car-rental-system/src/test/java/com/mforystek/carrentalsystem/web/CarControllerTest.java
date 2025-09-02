@@ -1,10 +1,10 @@
 package com.mforystek.carrentalsystem.web;
 
+import com.mforystek.carrentalsystem.dto.CarDTO;
 import com.mforystek.carrentalsystem.model.Car;
 import com.mforystek.carrentalsystem.model.CarType;
 import com.mforystek.carrentalsystem.service.CarService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -26,9 +26,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public class CarControllerTest {
     private static final String PLATE_NUMBER = "KR 12345";
     private static final CarType CAR_TYPE = CarType.Sedan;
-    private static final CarType CAR_TYPE2 = CarType.SUV;
     private static final Car CAR = new Car(PLATE_NUMBER, CAR_TYPE, List.of());
-    private static final Car CAR2 = new Car(PLATE_NUMBER, CAR_TYPE2, List.of());
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -48,24 +46,24 @@ public class CarControllerTest {
     public void getCarByPlateNumberTest() {
         when(carServiceMock.lookupByPlateNumber(any())).thenReturn(CAR);
 
-        ResponseEntity<Car> response = testRestTemplate.getForEntity("/cars/{plateNumber}", Car.class, PLATE_NUMBER);
-        Car responseCar = response.getBody();
+        ResponseEntity<CarDTO> response = testRestTemplate.getForEntity("/cars/{plateNumber}", CarDTO.class, PLATE_NUMBER);
+        CarDTO responseCar = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(carServiceMock).lookupByPlateNumber(PLATE_NUMBER);
-        assertThat(responseCar.getPlateNumber()).isEqualTo(PLATE_NUMBER);
+        assertThat(responseCar.plateNumber()).isEqualTo(PLATE_NUMBER);
     }
 
     @Test
     public void addNewCarTest() {
         when(carServiceMock.addCar(any())).thenReturn(CAR);
 
-        ResponseEntity<Car> response = testRestTemplate.postForEntity("/cars", CAR, Car.class);
-        Car responseCar = response.getBody();
+        ResponseEntity<CarDTO> response = testRestTemplate.postForEntity("/cars", CAR, CarDTO.class);
+        CarDTO responseCar = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         verify(carServiceMock).addCar(CAR);
-        assertThat(responseCar.getPlateNumber()).isEqualTo(PLATE_NUMBER);
+        assertThat(responseCar.plateNumber()).isEqualTo(PLATE_NUMBER);
     }
 
     @Test

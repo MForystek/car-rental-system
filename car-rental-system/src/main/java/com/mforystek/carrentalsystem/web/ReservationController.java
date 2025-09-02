@@ -1,5 +1,6 @@
 package com.mforystek.carrentalsystem.web;
 
+import com.mforystek.carrentalsystem.dto.ReservationDTO;
 import com.mforystek.carrentalsystem.model.CarType;
 import com.mforystek.carrentalsystem.model.Reservation;
 import com.mforystek.carrentalsystem.service.CarService;
@@ -40,13 +41,13 @@ public class ReservationController {
     @PostMapping("/{customerId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Reservation makeReservation(@PathVariable("customerId") Integer customerId, @RequestBody ReservationDTO reservationDTO) {
-        CarType carType = carService.lookupByPlateNumber(reservationDTO.getPlateNumber()).getCarType();
-        LocalDateTime endDateTime = reservationDTO.getStartDateTime().plusDays(reservationDTO.getDurationInDays());
-        return reservationService.makeReservation(customerId, carType, reservationDTO.getStartDateTime(), endDateTime);
+        CarType carType = carService.lookupByPlateNumber(reservationDTO.plateNumber()).getCarType();
+        LocalDateTime endDateTime = reservationDTO.startDateTime().plusDays(reservationDTO.durationInDays());
+        return reservationService.makeReservation(customerId, carType, reservationDTO.startDateTime(), endDateTime);
     }
 
     @DeleteMapping("/{customerId}")
     public void deleteReservation(@PathVariable("customerId") Integer customerId, @RequestBody ReservationDTO reservationDTO) {
-        reservationService.deleteReservation(customerId, reservationDTO.getPlateNumber(), reservationDTO.getStartDateTime());
+        reservationService.deleteReservation(customerId, reservationDTO.plateNumber(), reservationDTO.startDateTime());
     }
 }

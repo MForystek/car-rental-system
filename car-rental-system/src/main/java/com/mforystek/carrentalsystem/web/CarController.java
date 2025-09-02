@@ -1,10 +1,12 @@
 package com.mforystek.carrentalsystem.web;
 
+import com.mforystek.carrentalsystem.dto.CarDTO;
 import com.mforystek.carrentalsystem.model.Car;
 import com.mforystek.carrentalsystem.service.CarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,19 +19,19 @@ public class CarController {
     }
 
     @GetMapping
-    public List<Car> getAllCars() {
-        return carService.lookupAll();
+    public List<CarDTO> getAllCars() {
+        return carService.lookupAll().stream().map(CarDTO::new).toList();
     }
 
     @GetMapping("/{plateNumber}")
-    public Car getCarByPlateNumber(@PathVariable("plateNumber") String plateNumber) {
-        return carService.lookupByPlateNumber(plateNumber);
+    public CarDTO getCarByPlateNumber(@PathVariable("plateNumber") String plateNumber) {
+        return new CarDTO(carService.lookupByPlateNumber(plateNumber));
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Car addNewCar(@RequestBody Car carToAdd) {
-        return carService.addCar(carToAdd);
+    public CarDTO addNewCar(@RequestBody Car carToAdd) {
+        return new CarDTO(carService.addCar(carToAdd));
     }
 
     @DeleteMapping("/{plateNumber}")

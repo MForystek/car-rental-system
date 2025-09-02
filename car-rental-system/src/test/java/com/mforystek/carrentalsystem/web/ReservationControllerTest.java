@@ -1,5 +1,6 @@
 package com.mforystek.carrentalsystem.web;
 
+import com.mforystek.carrentalsystem.dto.ReservationDTO;
 import com.mforystek.carrentalsystem.model.Car;
 import com.mforystek.carrentalsystem.model.CarType;
 import com.mforystek.carrentalsystem.model.Reservation;
@@ -55,7 +56,10 @@ public class ReservationControllerTest {
         mockReservation();
         when(carMock.getPlateNumber()).thenReturn(PLATE_NUMBER);
 
-        ResponseEntity<String> response = testRestTemplate.getForEntity("/reservations/{plateNumber}", String.class, PLATE_NUMBER);
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
+                "/reservations/{plateNumber}",
+                String.class,
+                PLATE_NUMBER);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(reservationServiceMock).lookupForCarByPlateNumber(PLATE_NUMBER);
@@ -69,7 +73,10 @@ public class ReservationControllerTest {
         when(carMock.getCarType()).thenReturn(CAR_TYPE);
         when(carMock.getPlateNumber()).thenReturn(PLATE_NUMBER);
 
-        ResponseEntity<String> response = testRestTemplate.getForEntity("/reservations/carType?carType={carType}", String.class, CAR_TYPE);
+        ResponseEntity<String> response = testRestTemplate.getForEntity(
+                "/reservations/carType?carType={carType}",
+                String.class,
+                CAR_TYPE);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(reservationServiceMock).lookupByCarType(CAR_TYPE);
@@ -84,7 +91,11 @@ public class ReservationControllerTest {
         when(carMock.getPlateNumber()).thenReturn(PLATE_NUMBER);
         when(carMock.getCarType()).thenReturn(CAR_TYPE);
 
-        ResponseEntity<String> response = testRestTemplate.postForEntity("/reservations/{customerId}", RESERVATION_DTO, String.class, CUSTOMER_ID);
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/reservations/{customerId}",
+                RESERVATION_DTO,
+                String.class,
+                CUSTOMER_ID);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         verify(reservationServiceMock).makeReservation(CUSTOMER_ID, CAR_TYPE, START_DATE_TIME, END_DATE_TIME);
