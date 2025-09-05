@@ -39,8 +39,7 @@ public class CarService {
     }
 
     public void deleteCarByPlate(String plateNumber) throws NoSuchElementException {
-        Car carToDelete = carRepository.findByPlateNumber(plateNumber)
-                .orElseThrow(() -> new NoSuchElementException("No car with plate number: " + plateNumber));
+        Car carToDelete = lookupByPlateNumber(plateNumber);
 
         carRepository.delete(carToDelete);
     }
